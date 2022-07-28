@@ -1,0 +1,78 @@
+<html>
+<script src='https://d3js.org/d3.v5.min.js'
+src='https://cdnjs.cloudflare.com/ajax/libs/d3-annotation/1.12.1/d3-annotation.min.js
+'>
+
+</script>
+<style> circle {stroke: black;} </style>
+<body onload='init()'>
+<svg width=300 height=300>
+</svg>
+<script>
+///START OF REAL CODE
+
+async function init() {
+data = await d3.csv("https://flunky.github.io/cars2017.csv"); //read data
+
+var margin = 100; ///define margin cause I'm lazy
+var size = 200;
+
+var xs = d3.scaleLog().domain([10, 150]).range([ 0,  size]); ///scales
+var ys = d3.scaleLog().domain([10, 150]).range([size, 0]);
+
+
+/// MAIN GRAPH POINTS
+d3.select("svg")
+.attr("width",200 + 2*margin)
+.attr("height",200 + 2*margin)
+.append("g")
+.attr("transform","translate("+margin+","+margin+")")
+.selectAll("circle").data(data).enter().append("circle")
+.attr("cx", function(d) {return xs(d.AverageCityMPG);}) ///data
+.attr("cy", function(d) {return ys(d.AverageHighwayMPG);})
+.attr("r", function(d) {return parseFloat(d.EngineCylinders) + 2;})
+.attr("fill",function(d) {
+   if(d.Fuel == "Gasoline") return "green";
+   else return "blue";
+})
+;
+
+
+/// AXISES
+d3.select("svg").append("g")
+.attr("transform", "translate(" + margin + "," + margin + ")")
+.call(d3.axisLeft(ys)
+.tickValues([10, 20, 50, 100])  
+.tickFormat(d3.format("~s")));
+
+d3.select("svg").append("g")
+.attr("transform", "translate(" + margin + ","+(200+margin)+")")
+.call(d3.axisBottom(xs)
+.tickValues([10, 20, 50, 100])
+.tickFormat(d3.format("~s")));
+
+/// TEXTS
+d3.select("svg").append("text") ///LEFT
+.attr("transform", "translate(" + 0 + "," + 3/2*size+ ")")
+.style("font", "14px times")
+.style("font-style", "italic")
+.text("fuck");
+
+d3.select("svg").append("text") ///BOTTOM
+.attr("transform", "translate(" + size + "," + 3.3/2*size + ")")
+.style("font", "14px times")
+.style("font-style", "italic")
+.text("fuck");
+
+d3.select("svg").append("text") ///TITLE
+.attr("transform", "translate(" + size + "," + margin + ")")
+.style("font", "24px times")
+.style("font-style", "bold")
+.text("fuck");
+}
+</script>
+<a href="http://www.google.com/">
+   <button>Visit Google</button>
+</a>
+</body>
+</html>
